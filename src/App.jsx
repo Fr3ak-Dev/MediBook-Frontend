@@ -1,16 +1,17 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Layout from './components/Layout';
+import Dashboard from './pages/Dashboard';
+
 function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-2xl">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">
-          MediBook
-        </h1>
-        <p className="text-gray-600">
-          Sistema de Gestión de Citas Médicas
-        </p>
-      </div>
-    </div>
+    <BrowserRouter>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+        </Routes>
+      </Layout>
+    </BrowserRouter>
   )
 }
 
-export default App
+export default App;
