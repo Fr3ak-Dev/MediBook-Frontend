@@ -62,6 +62,18 @@ function Pacientes() {
         }
     }
 
+    const handleDelete = async (id) => {
+        if (window.confirm('¿Estás seguro de eliminar este paciente?')) {
+            try {
+                await pacientesAPI.delete(id)
+                cargarPacientes()
+            } catch (error) {
+                console.error('Error al eliminar:', error);
+                alert('Error al eliminar el paciente');
+            }
+        }
+    }
+
     useEffect(() => {
         cargarPacientes()
     }, [])
@@ -109,7 +121,7 @@ function Pacientes() {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{paciente.numeroHistoriaClinica}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                                         <button className="text-cyan-600 hover:text-cyan-900" onClick={() => abrirModal(paciente)}>Editar</button>
-                                        <button className="text-red-600 hover:text-red-900">Eliminar</button>
+                                        <button className="text-red-600 hover:text-red-900" onClick={() => handleDelete(paciente.id)}>Eliminar</button>
                                     </td>
                                 </tr>
                             ))
