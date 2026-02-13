@@ -14,6 +14,7 @@ function Medicos() {
     const [formData, setFormData] = useState({ ...initialFormData })
 
     const [filtroEspecialidad, setFiltroEspecialidad] = useState('')
+    const [errores, setErrores] = useState({})
 
     const cargarMedicos = async () => {
         try {
@@ -48,6 +49,7 @@ function Medicos() {
         setShowModal(false)
         setEditando(null)
         setFormData({ ...initialFormData })
+        setErrores({})
     }
 
     const handleInputChange = (e) => {
@@ -58,8 +60,33 @@ function Medicos() {
         })
     }
 
+    const validarFormulario = () => {
+        const nuevosErrores = {}
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(formData.email)) {
+            nuevosErrores.email = 'El email no es válido'
+        }
+
+        if (formData.cedula.length < 6 || formData.cedula.length > 10) {
+            nuevosErrores.cedula = 'La cédula debe tener entre 6 y 10 dígitos'
+        }
+
+        if (formData.telefono.length < 7) {
+            nuevosErrores.telefono = 'El teléfono debe tener al menos 7 dígitos'
+        }
+
+        setErrores(nuevosErrores)
+        return Object.keys(nuevosErrores).length === 0
+    }
+
     const handleInputSubmit = async (e) => {
         e.preventDefault()
+
+        if (!validarFormulario()) {
+            return
+        }
+
         try {
             if (editando) {
                 await medicosAPI.update(editando.id, formData)
@@ -69,8 +96,8 @@ function Medicos() {
             cargarMedicos()
             cerrarModal()
         } catch (error) {
-            console.error('Error al guardar:', error);
-            alert('Error al guardar el médico');
+            console.error('Error al guardar:', error)
+            alert('Error al guardar el médico')
         }
     }
 
@@ -80,8 +107,8 @@ function Medicos() {
                 await medicosAPI.delete(id)
                 cargarMedicos()
             } catch (error) {
-                console.error('Error al eliminar:', error);
-                alert('Error al eliminar el medico');
+                console.error('Error al eliminar:', error)
+                alert('Error al eliminar el medico')
             }
         }
     }
@@ -185,21 +212,42 @@ function Medicos() {
                                         Cédula
                                     </label>
                                     <input type="text" name="cedula" value={formData.cedula} onChange={handleInputChange} required
-                                        className='border w-full  px-3 py-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500' />
+                                        className={`border w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 ${errores.cedula
+                                            ? 'border-red-500 focus:ring-red-500'
+                                            : 'border-gray-300 focus:ring-cyan-500'
+                                            }`}
+                                    />
+                                    {errores.cedula && (
+                                        <p className="text-red-500 text-xs mt-1">{errores.cedula}</p>
+                                    )}
                                 </div>
                                 <div>
                                     <label className='block text-sm font-medium text-gray-700 mb-1'>
                                         Teléfono
                                     </label>
                                     <input type="text" name="telefono" value={formData.telefono} onChange={handleInputChange} required
-                                        className='border w-full  px-3 py-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500' />
+                                        className={`border w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 ${errores.telefono
+                                            ? 'border-red-500 focus:ring-red-500'
+                                            : 'border-gray-300 focus:ring-cyan-500'
+                                            }`}
+                                    />
+                                    {errores.telefono && (
+                                        <p className="text-red-500 text-xs mt-1">{errores.telefono}</p>
+                                    )}
                                 </div>
                                 <div>
                                     <label className='block text-sm font-medium text-gray-700 mb-1'>
                                         Correo Electrónico
                                     </label>
                                     <input type="email" name="email" value={formData.email} onChange={handleInputChange} required
-                                        className='border w-full  px-3 py-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500' />
+                                        className={`border w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 ${errores.email
+                                            ? 'border-red-500 focus:ring-red-500'
+                                            : 'border-gray-300 focus:ring-cyan-500'
+                                            }`}
+                                    />
+                                    {errores.email && (
+                                        <p className="text-red-500 text-xs mt-1">{errores.email}</p>
+                                    )}
                                 </div>
                                 <div>
                                     <label className='block text-sm font-medium text-gray-700 mb-1'>
