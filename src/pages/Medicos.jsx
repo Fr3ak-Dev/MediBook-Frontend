@@ -13,6 +13,8 @@ function Medicos() {
     const [editando, setEditando] = useState(null)
     const [formData, setFormData] = useState({ ...initialFormData })
 
+    const [filtroEspecialidad, setFiltroEspecialidad] = useState('')
+
     const cargarMedicos = async () => {
         try {
             const response = await medicosAPI.getAll()
@@ -89,11 +91,18 @@ function Medicos() {
         cargarEspecialidades()
     }, [])
 
-    const medicosFiltrados = medicos.filter(m =>
-        m.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-        m.apellido.toLowerCase().includes(busqueda.toLowerCase()) ||
-        m.cedula.toLowerCase().includes(busqueda.toLowerCase())
-    )
+    const medicosFiltrados = medicos.filter(m => {
+        const cumpleBusqueda =
+            m.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
+            m.apellido.toLowerCase().includes(busqueda.toLowerCase()) ||
+            m.cedula.toLowerCase().includes(busqueda.toLowerCase())
+
+        const cumpleEspecialidad =
+            filtroEspecialidad === '' ||
+            m.especialidadId === parseInt(filtroEspecialidad)
+
+        return cumpleBusqueda && cumpleEspecialidad
+    })
 
     return (
         <div>
@@ -104,10 +113,17 @@ function Medicos() {
                     + Nuevo Médico
                 </button>
             </div>
-            <div className="mb-6">
+            <div className="flex items-center mb-6">
                 <input type="text" placeholder="Buscar por nombres, apellidos o cédula..."
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg mr-4"
                     value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
+                <select value={filtroEspecialidad} onChange={(e) => setFiltroEspecialidad(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                    <option value="">Filtrar por especialidad</option>
+                    {especialidades.map((e) => (
+                        <option key={e.id} value={e.id}>{e.nombre}</option>
+                    ))}
+                </select>
             </div>
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
                 <table className="min-w-full">
