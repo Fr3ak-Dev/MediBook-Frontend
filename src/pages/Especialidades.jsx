@@ -1,3 +1,4 @@
+import * as XLSX from 'xlsx'
 import toast from 'react-hot-toast'
 import { useState, useEffect } from 'react'
 import { especialidadesAPI } from '../services/api'
@@ -26,6 +27,22 @@ function Especialidades() {
         } finally {
             setLoading(false)
         }
+    }
+
+    const exportarExcel = () => {
+
+        const datosExcel = especialidadesFiltrados.map(e => ({
+            'Nombre': e.nombre,
+            'Descripción': e.descripcion
+        }))
+
+        const hoja = XLSX.utils.json_to_sheet(datosExcel)
+
+        const libro = XLSX.utils.book_new()
+        XLSX.utils.book_append_sheet(libro, hoja, 'Especialidades')
+
+        XLSX.writeFile(libro, 'Especialidades.xlsx')
+        toast.success('Archivo Excel descargado')
     }
 
     const abrirModal = (especialidad = null) => {
@@ -113,10 +130,20 @@ function Especialidades() {
         <div>
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold text-gray-800">Especialidades</h1>
-                <button className="bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700"
-                    onClick={() => abrirModal()}>
-                    + Nueva Especialidad
-                </button>
+                <div className="flex gap-2">
+                    <button
+                        onClick={exportarExcel}
+                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+                    >
+                        📊 Exportar Excel
+                    </button>
+                    <button
+                        onClick={() => abrirModal()}
+                        className="bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700"
+                    >
+                        + Nueva Especialidad
+                    </button>
+                </div>
             </div>
             <div className="mb-6">
                 <input type="text" placeholder="Buscar por nombre o descripción..."

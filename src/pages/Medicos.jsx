@@ -1,3 +1,4 @@
+import * as XLSX from 'xlsx'
 import toast from 'react-hot-toast'
 import { useState, useEffect } from 'react'
 import { medicosAPI, especialidadesAPI } from '../services/api'
@@ -38,6 +39,26 @@ function Medicos() {
         } catch (error) {
             console.error('Error al cargar especialidades:', error)
         }
+    }
+
+    const exportarExcel = () => {
+
+        const datosExcel = medicosFiltrados.map(m => ({
+            'Nombre': m.nombre,
+            'Apellido': m.apellido,
+            'Cédula': m.cedula,
+            'Teléfono': m.telefono,
+            'Email': m.email,
+            'Especialidad': especialidades.find(e => e.id === m.especialidadId)?.nombre || ''
+        }))
+
+        const hoja = XLSX.utils.json_to_sheet(datosExcel)
+
+        const libro = XLSX.utils.book_new()
+        XLSX.utils.book_append_sheet(libro, hoja, 'Medicos')
+
+        XLSX.writeFile(libro, 'Medicos.xlsx')
+        toast.success('Archivo Excel descargado')
     }
 
     const abrirModal = (medico = null) => {
@@ -159,10 +180,20 @@ function Medicos() {
         <div>
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold text-gray-800">Médicos</h1>
-                <button className="bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700"
-                    onClick={() => abrirModal()}>
-                    + Nuevo Médico
-                </button>
+                <div className="flex gap-2">
+                    <button
+                        onClick={exportarExcel}
+                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+                    >
+                        📊 Exportar Excel
+                    </button>
+                    <button
+                        onClick={() => abrirModal()}
+                        className="bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700"
+                    >
+                        + Nuevo Médico
+                    </button>
+                </div>
             </div>
             <div className="flex items-center mb-6">
                 <input type="text" placeholder="Buscar por nombres, apellidos o cédula..."
