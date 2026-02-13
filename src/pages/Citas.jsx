@@ -112,6 +112,16 @@ function Citas() {
         return persona ? `${persona.nombre} ${persona.apellido}` : 'N/A';
     }
 
+    const obtenerEstiloEstado = (estado) => {
+        const estilos = {
+            Pendiente: 'bg-yellow-100 text-yellow-800',
+            Confirmada: 'bg-green-100 text-green-800',
+            Cancelada: 'bg-red-100 text-red-800',
+            Completada: 'bg-blue-100 text-blue-800'
+        }
+        return estilos[estado] || 'bg-gray-100 text-gray-800'
+    }
+
     const citasFiltrados = citas.filter(cita => {
         const nombreCompleto = obtenerNombreCompleto(cita.pacienteId, 'paciente') + ' ' + obtenerNombreCompleto(cita.medicoId, 'medico')
         const cumpleBusqueda = nombreCompleto.toLowerCase().includes(busqueda.toLowerCase())
@@ -171,8 +181,10 @@ function Citas() {
                                             minute: '2-digit'
                                         }) : 'N/A'}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {cita.estado}
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${obtenerEstiloEstado(cita.estado)}`}>
+                                            {cita.estado}
+                                        </span>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                                         <button className="text-cyan-600 hover:text-cyan-900" onClick={() => abrirModal(cita)}>Editar</button>
