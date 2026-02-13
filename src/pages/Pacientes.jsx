@@ -123,7 +123,7 @@ function Pacientes() {
                 </button>
             </div>
             <div className="mb-6">
-                <input type="text" placeholder="Buscar por nombre, apellido o cédula..."
+                <input type="text" placeholder="Buscar por nombres, apellidos o cédula..."
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                     // controlled component
                     value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />

@@ -93,7 +93,7 @@ function Especialidades() {
                 </button>
             </div>
             <div className="mb-6">
-                <input type="text" placeholder="Buscar por nombre, apellido o cédula..."
+                <input type="text" placeholder="Buscar por nombre o descripción..."
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                     value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
             </div>
