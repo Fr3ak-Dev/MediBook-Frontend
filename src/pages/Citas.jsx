@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast'
 import { useState, useEffect } from 'react'
 import { pacientesAPI, medicosAPI, citasAPI } from '../services/api'
 
@@ -81,14 +82,16 @@ function Citas() {
         try {
             if (editando) {
                 await citasAPI.update(editando.id, formData)
+                toast.success('Cita actualizada con éxito')
             } else {
                 await citasAPI.create(formData)
+                toast.success('Cita creada con éxito')
             }
             cargarCitas()
             cerrarModal()
         } catch (error) {
-            console.error('Error al guardar:', error);
-            alert('Error al guardar la cita');
+            console.error('Error al guardar:', error)
+            toast.error('Error al guardar la cita')
         } finally {
             setGuardando(false)
         }
@@ -98,10 +101,11 @@ function Citas() {
         if (window.confirm('¿Estás seguro de eliminar la cita?')) {
             try {
                 await citasAPI.delete(id)
+                toast.success('Cita eliminada con éxito')
                 cargarCitas()
             } catch (error) {
-                console.error('Error al eliminar:', error);
-                alert('Error al eliminar el cita');
+                console.error('Error al eliminar:', error)
+                toast.error('Error al eliminar la cita')
             }
         }
     }

@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
+
 import Layout from './components/Layout'
 import Dashboard from './pages/Dashboard'
 import Pacientes from './pages/Pacientes'
@@ -9,6 +11,7 @@ import Citas from './pages/Citas'
 function App() {
   return (
     <BrowserRouter>
+      <Toaster position="bottom-center" />
       <Layout>
         <Routes>
           <Route path="/" element={<Dashboard />} />

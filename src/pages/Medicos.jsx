@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast'
 import { useState, useEffect } from 'react'
 import { medicosAPI, especialidadesAPI } from '../services/api'
 
@@ -97,14 +98,16 @@ function Medicos() {
         try {
             if (editando) {
                 await medicosAPI.update(editando.id, formData)
+                toast.success('Médico actualizado con éxito')
             } else {
                 await medicosAPI.create(formData)
+                toast.success('Médico creado con éxito')
             }
             cargarMedicos()
             cerrarModal()
         } catch (error) {
             console.error('Error al guardar:', error)
-            alert('Error al guardar el médico')
+            toast.error('Error al guardar el médico')
         } finally {
             setGuardando(false);
         }
@@ -114,10 +117,11 @@ function Medicos() {
         if (window.confirm('¿Estás seguro de eliminar este médico?')) {
             try {
                 await medicosAPI.delete(id)
+                toast.success('Médico eliminado con éxito')
                 cargarMedicos()
             } catch (error) {
                 console.error('Error al eliminar:', error)
-                alert('Error al eliminar el medico')
+                toast.error('Error al eliminar el médico')
             }
         }
     }

@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast'
 import { useState, useEffect } from 'react'
 import { pacientesAPI } from '../services/api'
 
@@ -86,14 +87,16 @@ function Pacientes() {
         try {
             if (editando) {
                 await pacientesAPI.update(editando.id, formData)
+                toast.success('Paciente actualizado con éxito')
             } else {
                 await pacientesAPI.create(formData)
+                toast.success('Paciente creado con éxito')
             }
             cargarPacientes()
             cerrarModal()
         } catch (error) {
             console.error('Error al guardar:', error)
-            alert('Error al guardar el paciente')
+            toast.error('Error al guardar el paciente')
         } finally {
             setGuardando(false)
         }
@@ -103,10 +106,11 @@ function Pacientes() {
         if (window.confirm('¿Estás seguro de eliminar este paciente?')) {
             try {
                 await pacientesAPI.delete(id)
+                toast.success('Paciente eliminado con éxito')
                 cargarPacientes()
             } catch (error) {
                 console.error('Error al eliminar:', error)
-                alert('Error al eliminar el paciente')
+                toast.error('Error al eliminar el paciente')
             }
         }
     }

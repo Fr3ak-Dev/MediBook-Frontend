@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast'
 import { useState, useEffect } from 'react'
 import { especialidadesAPI } from '../services/api'
 
@@ -60,14 +61,16 @@ function Especialidades() {
         try {
             if (editando) {
                 await especialidadesAPI.update(editando.id, formData)
+                toast.success('Especialidad actualizada con éxito')
             } else {
                 await especialidadesAPI.create(formData)
+                toast.success('Especialidad creada con éxito')
             }
             cargarEspecialidades()
             cerrarModal()
         } catch (error) {
-            console.error('Error al guardar:', error);
-            alert('Error al guardar la especialidad');
+            console.error('Error al guardar:', error)
+            toast.error('Error al guardar la especialidad')
         } finally {
             setGuardando(false);
         }
@@ -77,10 +80,11 @@ function Especialidades() {
         if (window.confirm('¿Estás seguro de eliminar esta especialidad?')) {
             try {
                 await especialidadesAPI.delete(id)
+                toast.success('Especialidad eliminada con éxito')
                 cargarEspecialidades()
             } catch (error) {
                 console.error('Error al eliminar:', error);
-                alert('Error al eliminar la especialidad');
+                toast.error('Error al eliminar la especialidad');
             }
         }
     }
