@@ -319,6 +319,14 @@ function Citas() {
                                 </div>
                                 <div className='col-span-2'>
                                     <label className='block text-sm font-medium text-gray-700 mb-1'>
+                                        Motivo
+                                    </label>
+                                    <input type="text" name="motivo"
+                                        value={formData.motivo} onChange={handleInputChange}
+                                        className='border w-full px-3 py-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500' />
+                                </div>
+                                <div className='col-span-2'>
+                                    <label className='block text-sm font-medium text-gray-700 mb-1'>
                                         Observaciones
                                     </label>
                                     <input type="text" name="observaciones"
