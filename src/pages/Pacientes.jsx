@@ -13,13 +13,18 @@ function Pacientes() {
     const [formData, setFormData] = useState({ ...initialFormData })
 
     const [errores, setErrores] = useState({})
+    const [loading, setLoading] = useState(true)
+    const [guardando, setGuardando] = useState(false)
 
     const cargarPacientes = async () => {
         try {
+            setLoading(true)
             const response = await pacientesAPI.getAll()
             setPacientes(response.data)
         } catch (error) {
             console.error('Error al cargar pacientes:', error)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -50,7 +55,7 @@ function Pacientes() {
     }
 
     const validarFormulario = () => {
-        const nuevosErrores = {};
+        const nuevosErrores = {}
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!emailRegex.test(formData.email)) {
@@ -76,6 +81,8 @@ function Pacientes() {
             return
         }
 
+        setGuardando(true)
+
         try {
             if (editando) {
                 await pacientesAPI.update(editando.id, formData)
@@ -87,6 +94,8 @@ function Pacientes() {
         } catch (error) {
             console.error('Error al guardar:', error)
             alert('Error al guardar el paciente')
+        } finally {
+            setGuardando(false)
         }
     }
 
@@ -112,6 +121,17 @@ function Pacientes() {
         p.cedula.toLowerCase().includes(busqueda.toLowerCase()) ||
         p.numeroHistoriaClinica.toLowerCase().includes(busqueda.toLowerCase())
     )
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-64">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-600 mx-auto mb-4"></div>
+                    <p className="text-gray-600">Cargando pacientes...</p>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div>
@@ -244,9 +264,15 @@ function Pacientes() {
                                     className='px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50'>
                                     Cancelar
                                 </button>
-                                <button type="submit"
-                                    className='px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700'>
-                                    {editando ? 'Actualizar' : 'Guardar'}
+                                <button
+                                    type="submit"
+                                    disabled={guardando}
+                                    className={`px-4 py-2 rounded-lg text-white ${guardando
+                                        ? 'bg-gray-400 cursor-not-allowed'
+                                        : 'bg-cyan-600 hover:bg-cyan-700'
+                                        }`}
+                                >
+                                    {guardando ? 'Guardando...' : (editando ? 'Actualizar' : 'Guardar')}
                                 </button>
                             </div>
                         </form>

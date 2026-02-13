@@ -15,6 +15,8 @@ function Citas() {
     const [formData, setFormData] = useState({ ...initialFormData })
 
     const [filtroEstado, setFiltroEstado] = useState('')
+    const [loading, setLoading] = useState(true)
+    const [guardando, setGuardando] = useState(false)
 
     const cargarPacientes = async () => {
         try {
@@ -36,10 +38,13 @@ function Citas() {
 
     const cargarCitas = async () => {
         try {
+            setLoading(true)
             const response = await citasAPI.getAll()
             setCitas(response.data)
         } catch (error) {
             console.error('Error al cargar citas:', error)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -70,6 +75,9 @@ function Citas() {
 
     const handleInputSubmit = async (e) => {
         e.preventDefault()
+
+        setGuardando(true)
+
         try {
             if (editando) {
                 await citasAPI.update(editando.id, formData)
@@ -81,6 +89,8 @@ function Citas() {
         } catch (error) {
             console.error('Error al guardar:', error);
             alert('Error al guardar la cita');
+        } finally {
+            setGuardando(false)
         }
     }
 
@@ -128,6 +138,17 @@ function Citas() {
         const cumpleFiltrado = filtroEstado === '' || cita.estado === filtroEstado
         return cumpleBusqueda && cumpleFiltrado
     })
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-64">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-600 mx-auto mb-4"></div>
+                    <p className="text-gray-600">Cargando citas...</p>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div>
@@ -275,9 +296,15 @@ function Citas() {
                                     className='px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50'>
                                     Cancelar
                                 </button>
-                                <button type="submit"
-                                    className='px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700'>
-                                    {editando ? 'Actualizar' : 'Guardar'}
+                                <button
+                                    type="submit"
+                                    disabled={guardando}
+                                    className={`px-4 py-2 rounded-lg text-white ${guardando
+                                        ? 'bg-gray-400 cursor-not-allowed'
+                                        : 'bg-cyan-600 hover:bg-cyan-700'
+                                        }`}
+                                >
+                                    {guardando ? 'Guardando...' : (editando ? 'Actualizar' : 'Guardar')}
                                 </button>
                             </div>
                         </form>
