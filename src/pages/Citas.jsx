@@ -1,3 +1,5 @@
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx'
 import toast from 'react-hot-toast'
 import { useState, useEffect } from 'react'
@@ -68,6 +70,37 @@ function Citas() {
 
         XLSX.writeFile(libro, 'Citas.xlsx')
         toast.success('Archivo Excel descargado')
+    }
+
+    const exportarPDF = () => {
+        const doc = new jsPDF()
+
+        doc.setFontSize(18)
+        doc.text('Lista de Citas', 14, 20)
+
+        doc.setFontSize(10)
+        doc.text(`Fecha: ${new Date().toLocaleDateString('es-ES')}`, 14, 28)
+
+        const columnas = ['Paciente', 'Médico', 'Fecha', 'Motivo', 'Estado', 'Observaciones']
+        const filas = citasFiltrados.map(c => [
+            obtenerNombreCompleto(c.pacienteId, 'paciente'),
+            obtenerNombreCompleto(c.medicoId, 'medico'),
+            new Date(c.fechaHora).toLocaleString('es-ES'),
+            c.motivo,
+            c.estado,
+            c.observaciones
+        ])
+
+        autoTable(doc, {
+            head: [columnas],
+            body: filas,
+            startY: 35,
+            styles: { fontSize: 9 },
+            headStyles: { fillColor: [8, 145, 178] }
+        })
+
+        doc.save('Citas.pdf')
+        toast.success('Archivo PDF descargado')
     }
 
     const abrirModal = (cita = null) => {
@@ -185,6 +218,12 @@ function Citas() {
                         className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
                     >
                         📊 Exportar Excel
+                    </button>
+                    <button
+                        onClick={exportarPDF}
+                        className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+                    >
+                        📄 Exportar PDF
                     </button>
                     <button
                         onClick={() => abrirModal()}

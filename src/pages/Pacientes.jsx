@@ -1,3 +1,5 @@
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx'
 import toast from 'react-hot-toast'
 import { useState, useEffect } from 'react'
@@ -50,6 +52,39 @@ function Pacientes() {
 
         XLSX.writeFile(libro, 'Pacientes.xlsx')
         toast.success('Archivo Excel descargado')
+    }
+
+    const exportarPDF = () => {
+        const doc = new jsPDF()
+
+        doc.setFontSize(18)
+        doc.text('Lista de Pacientes', 14, 20)
+
+        doc.setFontSize(10)
+        doc.text(`Fecha: ${new Date().toLocaleDateString('es-ES')}`, 14, 28)
+
+        const columnas = ['Nombre Completo', 'Cédula', 'Fecha Nacimiento', 'Teléfono', 'Email', 'Dirección', 'Historia Clínica']
+        const filas = pacientesFiltrados.map(p => [
+            obtenerNombreCompleto(p),
+            p.cedula,
+            new Date(p.fechaNacimiento).toLocaleDateString('es-ES'),
+            p.telefono,
+            p.email,
+            p.direccion,
+            p.numeroHistoriaClinica
+        ])
+
+        // Crear tabla
+        autoTable(doc, {
+            head: [columnas],
+            body: filas,
+            startY: 35,
+            styles: { fontSize: 9 },
+            headStyles: { fillColor: [8, 145, 178] } // color cyan-600 en RGB
+        })
+
+        doc.save('Pacientes.pdf')
+        toast.success('Archivo PDF descargado')
     }
 
     const abrirModal = (paciente = null) => {
@@ -142,6 +177,10 @@ function Pacientes() {
         cargarPacientes()
     }, [])
 
+    const obtenerNombreCompleto = (paciente) => {
+        return paciente ? `${paciente.nombre} ${paciente.apellido}` : 'N/A';
+    }
+
     const pacientesFiltrados = pacientes.filter(p =>
         p.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
         p.apellido.toLowerCase().includes(busqueda.toLowerCase()) ||
@@ -170,6 +209,12 @@ function Pacientes() {
                         className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
                     >
                         📊 Exportar Excel
+                    </button>
+                    <button
+                        onClick={exportarPDF}
+                        className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+                    >
+                        📄 Exportar PDF
                     </button>
                     <button
                         onClick={() => abrirModal()}

@@ -1,3 +1,5 @@
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx'
 import toast from 'react-hot-toast'
 import { useState, useEffect } from 'react'
@@ -59,6 +61,36 @@ function Medicos() {
 
         XLSX.writeFile(libro, 'Medicos.xlsx')
         toast.success('Archivo Excel descargado')
+    }
+
+    const exportarPDF = () => {
+        const doc = new jsPDF()
+
+        doc.setFontSize(18)
+        doc.text('Lista de Medicos', 14, 20)
+
+        doc.setFontSize(10)
+        doc.text(`Fecha: ${new Date().toLocaleDateString('es-ES')}`, 14, 28)
+
+        const columnas = ['Nombre Completo', 'Cédula', 'Teléfono', 'Email', 'Especialidad']
+        const filas = medicosFiltrados.map(m => [
+            obtenerNombreCompleto(m),
+            m.cedula,
+            m.telefono,
+            m.email,
+            especialidades.find(e => e.id === m.especialidadId)?.nombre || ''
+        ])
+
+        autoTable(doc, {
+            head: [columnas],
+            body: filas,
+            startY: 35,
+            styles: { fontSize: 9 },
+            headStyles: { fillColor: [8, 145, 178] }
+        })
+
+        doc.save('Medicos.pdf')
+        toast.success('Archivo PDF descargado')
     }
 
     const abrirModal = (medico = null) => {
@@ -152,6 +184,10 @@ function Medicos() {
         cargarEspecialidades()
     }, [])
 
+    const obtenerNombreCompleto = (medico) => {
+        return medico ? `${medico.nombre} ${medico.apellido}` : 'N/A';
+    }
+
     const medicosFiltrados = medicos.filter(m => {
         const cumpleBusqueda =
             m.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
@@ -186,6 +222,12 @@ function Medicos() {
                         className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
                     >
                         📊 Exportar Excel
+                    </button>
+                    <button
+                        onClick={exportarPDF}
+                        className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+                    >
+                        📄 Exportar PDF
                     </button>
                     <button
                         onClick={() => abrirModal()}

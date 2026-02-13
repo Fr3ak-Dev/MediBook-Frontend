@@ -1,3 +1,5 @@
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 import * as XLSX from 'xlsx'
 import toast from 'react-hot-toast'
 import { useState, useEffect } from 'react'
@@ -43,6 +45,33 @@ function Especialidades() {
 
         XLSX.writeFile(libro, 'Especialidades.xlsx')
         toast.success('Archivo Excel descargado')
+    }
+
+    const exportarPDF = () => {
+        const doc = new jsPDF()
+
+        doc.setFontSize(18)
+        doc.text('Lista de Especialidades', 14, 20)
+
+        doc.setFontSize(10)
+        doc.text(`Fecha: ${new Date().toLocaleDateString('es-ES')}`, 14, 28)
+
+        const columnas = ['Nombre', 'Descripción']
+        const filas = especialidadesFiltrados.map(e => [
+            e.nombre,
+            e.descripcion
+        ])
+
+        autoTable(doc, {
+            head: [columnas],
+            body: filas,
+            startY: 35,
+            styles: { fontSize: 9 },
+            headStyles: { fillColor: [8, 145, 178] }
+        })
+
+        doc.save('Especialidades.pdf')
+        toast.success('Archivo PDF descargado')
     }
 
     const abrirModal = (especialidad = null) => {
@@ -136,6 +165,12 @@ function Especialidades() {
                         className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
                     >
                         📊 Exportar Excel
+                    </button>
+                    <button
+                        onClick={exportarPDF}
+                        className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+                    >
+                        📄 Exportar PDF
                     </button>
                     <button
                         onClick={() => abrirModal()}
