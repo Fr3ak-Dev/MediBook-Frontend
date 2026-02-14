@@ -86,32 +86,32 @@ function Dashboard() {
 
     return (
         <div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-8">Dashboard</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 md:mb-8">Dashboard</h1>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-cyan-600">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
+                <div className="bg-white p-4 md:p-6 rounded-lg shadow-md border-l-4 border-cyan-600">
                     <h3 className="text-gray-500 text-sm font-semibold uppercase">Pacientes</h3>
-                    <p className="text-4xl font-bold text-gray-800 mt-2">{stats.pacientes}</p>
+                    <p className="text-2xl md:text-4xl font-bold text-gray-800 mt-2">{stats.pacientes}</p>
                 </div>
-                <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-cyan-600">
+                <div className="bg-white p-4 md:p-6 rounded-lg shadow-md border-l-4 border-cyan-600">
                     <h3 className="text-gray-500 text-sm font-semibold uppercase">Médicos</h3>
-                    <p className="text-4xl font-bold text-gray-800 mt-2">{stats.medicos}</p>
+                    <p className="text-2xl md:text-4xl font-bold text-gray-800 mt-2">{stats.medicos}</p>
                 </div>
-                <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-cyan-600">
+                <div className="bg-white p-4 md:p-6 rounded-lg shadow-md border-l-4 border-cyan-600">
                     <h3 className="text-gray-500 text-sm font-semibold uppercase">Especialidades</h3>
-                    <p className="text-4xl font-bold text-gray-800 mt-2">{stats.especialidades}</p>
+                    <p className="text-2xl md:text-4xl font-bold text-gray-800 mt-2">{stats.especialidades}</p>
                 </div>
-                <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-cyan-600">
+                <div className="bg-white p-4 md:p-6 rounded-lg shadow-md border-l-4 border-cyan-600">
                     <h3 className="text-gray-500 text-sm font-semibold uppercase">Citas</h3>
-                    <p className="text-4xl font-bold text-gray-800 mt-2">{stats.citas}</p>
+                    <p className="text-2xl md:text-4xl font-bold text-gray-800 mt-2">{stats.citas}</p>
                 </div>
             </div>
 
             {/* Gráficos */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                    <h3 className="text-lg font-bold text-gray-800 mb-4">Citas por Estado</h3>
-                    <ResponsiveContainer width="100%" height={300}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+                <div className="bg-white p-3 md:p-6 rounded-lg shadow-md">
+                    <h3 className="text-base md:text-lg font-bold text-gray-800 mb-4">Citas por Estado</h3>
+                    <ResponsiveContainer width="100%" height={250}>
                         <BarChart data={prepararDatosCitasPorEstado()}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="nombre" />
@@ -122,9 +122,9 @@ function Dashboard() {
                     </ResponsiveContainer>
                 </div>
 
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                    <h3 className="text-lg font-bold text-gray-800 mb-4">Médicos por Especialidad</h3>
-                    <ResponsiveContainer width="100%" height={300}>
+                <div className="bg-white p-3 md:p-6 rounded-lg shadow-md">
+                    <h3 className="text-base md:text-lg font-bold text-gray-800 mb-4">Médicos por Especialidad</h3>
+                    <ResponsiveContainer width="100%" height={250}>
                         <PieChart>
                             <Pie
                                 data={prepararDatosMedicosPorEspecialidad()}
@@ -146,9 +146,9 @@ function Dashboard() {
                     </ResponsiveContainer>
                 </div>
 
-                <div className="bg-white p-6 rounded-lg shadow-md lg:col-span-2">
-                    <h3 className="text-lg font-bold text-gray-800 mb-4">Tendencia de Citas (Últimos 6 meses)</h3>
-                    <ResponsiveContainer width="100%" height={300}>
+                <div className="bg-white p-3 md:p-6 rounded-lg shadow-md lg:col-span-2">
+                    <h3 className="text-base md:text-lg font-bold text-gray-800 mb-4">Tendencia de Citas (Últimos 6 meses)</h3>
+                    <ResponsiveContainer width="100%" height={250}>
                         <LineChart data={prepararDatosCitasPorMes()}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="nombre" />

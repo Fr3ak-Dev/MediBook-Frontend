@@ -201,24 +201,24 @@ function Pacientes() {
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold text-gray-800">Pacientes</h1>
-                <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Pacientes</h1>
+                <div className="flex flex-wrap gap-2">
                     <button
                         onClick={exportarExcel}
-                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+                        className="bg-green-600 text-white px-3 py-2 text-sm rounded-lg hover:bg-green-700 transition"
                     >
-                        📊 Exportar Excel
+                        📊 Excel
                     </button>
                     <button
                         onClick={exportarPDF}
-                        className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+                        className="bg-red-600 text-white px-3 py-2 text-sm rounded-lg hover:bg-red-700 transition"
                     >
-                        📄 Exportar PDF
+                        📄 PDF
                     </button>
                     <button
                         onClick={() => abrirModal()}
-                        className="bg-cyan-600 text-white px-4 py-2 rounded-lg hover:bg-cyan-700"
+                        className="bg-cyan-600 text-white px-3 py-2 text-sm rounded-lg hover:bg-cyan-700"
                     >
                         + Nuevo Paciente
                     </button>
@@ -230,7 +230,7 @@ function Pacientes() {
                     // controlled component
                     value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
             </div>
-            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="bg-white rounded-lg shadow-md overflow-x-auto">
                 <table className="min-w-full">
                     <thead className="bg-gray-50">
                         <tr>
@@ -263,12 +263,12 @@ function Pacientes() {
             {/* Modal */}
             {showModal && (
                 <div className='fixed bg-black bg-opacity-50 flex items-center justify-center z-50 inset-0'>
-                    <div className='bg-white rounded-lg p-8 max-w-2xl w-full max-h-screen overflow-y-auto'>
-                        <h2 className='text-2xl font-bold mb-6 text-gray-800'>
+                    <div className='bg-white rounded-lg p-4 md:p-8 max-w-2xl w-full mx-3 md:mx-0 max-h-[90vh] overflow-y-auto'>
+                        <h2 className='text-xl md:text-2xl font-bold mb-4 md:mb-6 text-gray-800'>
                             {editando ? 'Editar Paciente' : 'Nuevo Paciente'}
                         </h2>
                         <form className='space-y-4' onSubmit={handleInputSubmit}>
-                            <div className='grid grid-cols-2 gap-4'>
+                            <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
                                 <div>
                                     <label className='block text-sm font-medium text-gray-700 mb-1'>
                                         Nombres
@@ -326,14 +326,14 @@ function Pacientes() {
                                             ${errores.email ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-cyan-500'}`} />
                                     {errores.email && <p className='text-red-500 text-xs mt-1'>{errores.email}</p>}
                                 </div>
-                                <div className='col-span-2'>
+                                <div className='sm:col-span-2'>
                                     <label className='block text-sm font-medium text-gray-700 mb-1'>
                                         Dirección
                                     </label>
                                     <input type="text" name="direccion" value={formData.direccion} onChange={handleInputChange} required
                                         className='border w-full  px-3 py-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500' />
                                 </div>
-                                <div className='col-span-2'>
+                                <div className='sm:col-span-2'>
                                     <label className='block text-sm font-medium text-gray-700 mb-1'>
                                         Número de Historia Clínica
                                     </label>
