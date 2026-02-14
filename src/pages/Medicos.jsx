@@ -242,7 +242,7 @@ function Medicos() {
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                     value={busqueda} onChange={(e) => setBusqueda(e.target.value)} />
                 <select value={filtroEspecialidad} onChange={(e) => setFiltroEspecialidad(e.target.value)}
-                    className="w-full sm:w-auto sm:min-w-[200px] px-4 py-2 border border-gray-300 rounded-lg">
+                    className="w-full sm:w-auto sm:min-w-[250px] px-4 py-2 border border-gray-300 rounded-lg">
                     <option value="">Filtrar por especialidad</option>
                     {especialidades.map((e) => (
                         <option key={e.id} value={e.id}>{e.nombre}</option>
